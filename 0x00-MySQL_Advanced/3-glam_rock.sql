@@ -3,19 +3,12 @@
 
 DELIMITER $$
 
-CREATE FUNCTION calculate_lifespan(formed INT, split INT)
-RETURNS INT DETERMINISTIC
-BEGIN
-	DECLARE lifespan INT;
-	SET lifespan = IFNULL(split,  2022) - formed;
-	RETURN lifespan;
-END;
-
-DELIMITER;
-
-
 SELECT band_name,
-calculate_lifespan(formed,split) AS longevity
-FROM bands
-WHERE main_style = 'Glam rock'
-ORDER BY longevity DESC;
+CASE
+	WHEN split IS NOT NULL THEN (split - formed)
+	ELSE (2022 - formed)
+END AS lifespan
+
+FROM metal_bands
+WHERE style = 'Glam rock'
+ORDER BY lifespan DESC;
