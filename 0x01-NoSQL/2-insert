@@ -1,0 +1,5 @@
+// Write a script that inserts a document in the collection school
+// The document must have one attribute name with value “Holberton school”
+
+db.createCollection("school")
+db.school.insertOne({name: "Holberton school" })
