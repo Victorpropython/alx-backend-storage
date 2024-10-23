@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import pymongo
 
 """Write a Python function that inserts a new document
 in a collection based on kwargs"""
@@ -14,9 +13,6 @@ def insert_school(mongo_collection, **kwargs):
     Returns:
         the _id of the newly inserted document.
     """
-    try:
-        results = mongo_collection.insert_one(kwargs)
-        return results.inserted_id
-    except Exception as e:
-        print(f"Error inserting document: {e}")
-        return None
+    results = mongo_collection.insert_one(kwargs)
+    return results.inserted_id
+    
