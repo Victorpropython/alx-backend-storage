@@ -15,7 +15,7 @@ def insert_school(mongo_collection, **kwargs):
         the _id of the newly inserted document.
     """
     try:
-        results = mongo_collection.insertOne(kwargs)
+        results = mongo_collection.insert_one(kwargs)
         return result.inserted_id
     except Exception as e:
         print(f"Error inserting document: {e}")
