@@ -5,8 +5,9 @@ and flush the instance using flushdb."""
 
 import redis
 import uuid
-from typing import callable, Union
+from typing import Callable, Union
 from functools import wraps
+
 
 class Cache:
     """Creating A classfor  the caching and maintenance"""
@@ -21,17 +22,20 @@ class Cache:
         self._redis.set(key, data)
         return key
 
-    # Gteating a get function 
-    def get(self, key: str, fn: Callable None) -> Union[str, bytes, int, float, None]:
-        """Retrieves data from Redis and applies conversion function if needed"""
+    # Gteating a get function
+    def get(self, key: str, fn: Callable = None) -> Union[str, bytes, int,
+                                                          float, None]:
+        """Retrieves data from Redis and applies
+        conversion function if needed"""
+
         value = self._redis.get(key)
         if value is None:
             return None
         if fn:
             return fn(value)
         return value
-    
-    def get_str(self. key: str) -> str:
+
+    def get_str(self, key: str) -> str:
         """ Retrives the data as a string"""
         return self.get(key, lambda x: x.decode('utf-8'))
 
@@ -43,11 +47,15 @@ class Cache:
         """Decorator tocount how many times a method is called"""
         def wrapper(self, *args, **kwargs):
             """wrapper function to increament the count"""
-            #usingthe methodqualified name
+            # using the method qualified name
             key = method.__qualname__
 
             # increamenting the countfor the method
             self._redis.incr(key)
-            return method(self, *args, **kwargs)
+            result = method(self, *args, **kwargs)
+            return result
 
         return wrapper
+
+    # Decorate the store method with count_calls
+    store = count_calls(store)
